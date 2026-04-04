@@ -1,130 +1,130 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="images/logo_bullraii.webp" type="image/svg+xml">
-  <title>Bullraï — Configurateur</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo_bullraii.webp" type="image/svg+xml">
+    <title>Bullraï — Configurateur</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <img src="images/name_Bullraii.svg" alt="Bullraï" class="logo-svg">FIGHTSTICK CONFIGURATEUR</span>
-    <div class="header__spacer"></div>
-    <div class="header__tag" id="header-tag">—</div>
-  </header>
+    <!-- HEADER -->
+    <header class="header">
+        <img src="images/name_Bullraii.svg" alt="Bullraï" class="logo-svg">FIGHTSTICK CONFIGURATEUR</span>
+        <div class="header__spacer"></div>
+        <div class="header__tag" id="header-tag">—</div>
+    </header>
 
-  <div class="app__body">
+    <div class="app__body">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-      <div class="panel">
-        <div class="panel__title">Boîtier</div>
-        <div id="layout-list" class="gap-4"></div>
-        <div class="mt-6">
-          <label class="btn btn--full" style="cursor:pointer;justify-content:center;display:flex;">
-            ⬆ Importer SVG
-            <input type="file" id="btn-import" accept=".svg" style="display:none">
-          </label>
+            <div class="panel">
+                <div class="panel__title">Boîtier</div>
+                <div id="layout-list" class="gap-4"></div>
+                <div class="mt-6">
+                    <label class="btn btn--full" style="cursor:pointer;justify-content:center;display:flex;">
+                        ⬆ Importer SVG
+                        <input type="file" id="btn-import" accept=".svg" style="display:none">
+                    </label>
+                </div>
+            </div>
+
+            <div class="panel-row">
+                <div class="panel panel--half">
+                    <div class="panel__title">Gauche</div>
+                    <div id="left-list" class="gap-4"></div>
+                </div>
+                <div class="panel panel--half">
+                    <div class="panel__title">Droite</div>
+                    <div id="right-list" class="gap-4"></div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel__title">Ajouter un bouton</div>
+                <div class="prop-row">
+                    <div class="prop-label">Taille</div>
+                    <select id="add-size">
+                        <option value="24">24mm</option>
+                        <option value="30">30mm</option>
+                    </select>
+                </div>
+                <button class="btn is-primary btn--full" id="btn-add">+ Ajouter un bouton</button>
+            </div>
+
+        </aside>
+
+        <!-- CANVAS -->
+        <div class="canvas-area">
+
+            <div class="toolbar">
+            <button class="btn" id="btn-grid">Grille</button>
+            <button class="btn" id="btn-snap">Snap 1mm</button>
+            <div class="toolbar__spacer"></div>
+            <button class="btn" id="btn-export-txt">⬇ TXT</button>
+            <button class="btn is-primary" id="btn-export-svg">⬇ SVG</button>
         </div>
-      </div>
 
-      <div class="panel-row">
-        <div class="panel panel--half">
-          <div class="panel__title">Gauche</div>
-          <div id="left-list" class="gap-4"></div>
+            <div class="canvas-wrap" id="canvas-wrap">
+                <div id="canvas-bg">
+                    <img id="bg-img" alt="" draggable="false">
+                </div>
+                <div id="canvas-buttons"></div>
+            </div>
+
+            <div class="statusbar">
+                <div id="status-pos">x: <span>—</span> y: <span>—</span> mm</div>
+                <div id="status-sel">sel: <span>aucune</span></div>
+                <div class="statusbar__spacer"></div>
+                <div id="status-count">boutons: <span>0</span></div>
+            </div>
+
         </div>
-        <div class="panel panel--half">
-          <div class="panel__title">Droite</div>
-          <div id="right-list" class="gap-4"></div>
-        </div>
-      </div>
 
-      <div class="panel">
-        <div class="panel__title">Ajouter un bouton</div>
-        <div class="prop-row">
-          <div class="prop-label">Taille</div>
-          <select id="add-size">
-            <option value="24">24mm</option>
-            <option value="30">30mm</option>
-          </select>
-        </div>
-        <button class="btn is-primary btn--full" id="btn-add">+ Ajouter un bouton</button>
-      </div>
+        <!-- RIGHT PANEL -->
+        <aside class="rpanel">
+            <div class="panel">
+                <div class="panel__title">Propriétés</div>
 
-    </aside>
+                <div id="props-empty" class="hint">Clique sur un bouton pour éditer</div>
 
-    <!-- CANVAS -->
-    <div class="canvas-area">
-
-      <div class="toolbar">
-        <button class="btn" id="btn-grid">Grille</button>
-        <button class="btn" id="btn-snap">Snap 1mm</button>
-        <div class="toolbar__spacer"></div>
-        <button class="btn" id="btn-export-txt">⬇ TXT</button>
-        <button class="btn is-primary" id="btn-export-svg">⬇ SVG</button>
-      </div>
-
-      <div class="canvas-wrap" id="canvas-wrap">
-        <div id="canvas-bg">
-          <img id="bg-img" alt="" draggable="false">
-        </div>
-        <div id="canvas-buttons"></div>
-      </div>
-
-      <div class="statusbar">
-        <div id="status-pos">x: <span>—</span> y: <span>—</span> mm</div>
-        <div id="status-sel">sel: <span>aucune</span></div>
-        <div class="statusbar__spacer"></div>
-        <div id="status-count">boutons: <span>0</span></div>
-      </div>
+                <div id="props-form" style="display:none">
+                    <div class="prop-row">
+                        <div class="prop-label">Nom</div>
+                        <input type="text" id="prop-name" placeholder="LP, HP, K1…">
+                    </div>
+                    <div class="prop-row">
+                        <div class="prop-label">Taille</div>
+                        <div class="size-selector">
+                            <button class="size-btn" data-size="24">
+                                <span class="dot" style="width:10px;height:10px;"></span> 24mm
+                            </button>
+                            <button class="size-btn" data-size="30">
+                                <span class="dot" style="width:13px;height:13px;"></span> 30mm
+                            </button>
+                        </div>
+                        <input type="hidden" id="prop-size">
+                    </div>
+                    <div class="prop-row">
+                        <div class="prop-label">Position (mm)</div>
+                        <div class="row-5">
+                            <input type="text" id="prop-x" placeholder="X" style="flex:1">
+                            <input type="text" id="prop-y" placeholder="Y" style="flex:1">
+                        </div>
+                    </div>
+                    <div class="gap-4 mt-6">
+                        <button class="btn btn--full is-disabled" id="rpanel-dup">Dupliquer</button>
+                        <button class="btn btn--full is-danger is-disabled" id="rpanel-delete">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
     </div>
-
-    <!-- RIGHT PANEL -->
-    <aside class="rpanel">
-      <div class="panel">
-        <div class="panel__title">Propriétés</div>
-
-        <div id="props-empty" class="hint">Clique sur un bouton pour éditer</div>
-
-        <div id="props-form" style="display:none">
-          <div class="prop-row">
-            <div class="prop-label">Nom</div>
-            <input type="text" id="prop-name" placeholder="LP, HP, K1…">
-          </div>
-          <div class="prop-row">
-            <div class="prop-label">Taille</div>
-            <div class="size-selector">
-              <button class="size-btn" data-size="24">
-                <span class="dot" style="width:10px;height:10px;"></span> 24mm
-              </button>
-              <button class="size-btn" data-size="30">
-                <span class="dot" style="width:13px;height:13px;"></span> 30mm
-              </button>
-            </div>
-            <input type="hidden" id="prop-size">
-          </div>
-          <div class="prop-row">
-            <div class="prop-label">Position (mm)</div>
-            <div class="row-5">
-              <input type="text" id="prop-x" placeholder="X" style="flex:1">
-              <input type="text" id="prop-y" placeholder="Y" style="flex:1">
-            </div>
-          </div>
-          <div class="gap-4 mt-6">
-            <button class="btn btn--full is-disabled" id="rpanel-dup">Dupliquer</button>
-            <button class="btn btn--full is-danger is-disabled" id="rpanel-delete">Supprimer</button>
-          </div>
-        </div>
-      </div>
-    </aside>
-
-  </div>
 </div>
 <script src="app.js"></script>
 </body>

@@ -3,18 +3,18 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #080B14;
-  --surface:  #0f1220;
-  --surface2: #171b2e;
-  --border:   #252840;
-  --accent:   #7027CF;
-  --accent2:  #A368FF;
-  --indigo:   #2D4FCC;
-  --text:     #DDE8FF;
-  --muted:    #5a6080;
-  --danger:   #e05050;
-  --btn24:    #2D4FCC;
-  --btn30:    #7027CF;
+    --bg:       #080B14;
+    --surface:  #0f1220;
+    --surface2: #171b2e;
+    --border:   #252840;
+    --accent:   #7027CF;
+    --accent2:  #A368FF;
+    --indigo:   #2D4FCC;
+    --text:     #DDE8FF;
+    --muted:    #5a6080;
+    --danger:   #e05050;
+    --btn24:    #2D4FCC;
+    --btn30:    #7027CF;
 }
 
 html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Rajdhani', sans-serif; font-size: 14px; }
@@ -25,10 +25,10 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 
 /* ── HEADER ── */
 .header {
-  display: flex; align-items: center; gap: 12px;
-  height: 42px; padding: 0 16px;
-  background: var(--surface); border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+    display: flex; align-items: center; gap: 12px;
+    height: 42px; padding: 0 16px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
 }
 .logo-svg { height: 28px; width: auto; display: block; }
 .logo { font-size: 17px; font-weight: 700; letter-spacing: 3px; color: var(--accent2); }
@@ -38,18 +38,18 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 
 /* ── SIDEBAR ── */
 .sidebar {
-  width: 210px; min-width: 210px;
-  background: var(--surface); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
+    width: 210px; min-width: 210px;
+    background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
 }
 
 /* ── CANVAS AREA ── */
 .canvas-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .canvas-wrap {
-  flex: 1; position: relative; overflow: hidden;
-  background: var(--bg);
-  background-image: radial-gradient(circle at 1px 1px, #1a1d2e 1px, transparent 0);
-  background-size: 24px 24px;
+    flex: 1; position: relative; overflow: hidden;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 1px 1px, #1a1d2e 1px, transparent 0);
+    background-size: 24px 24px;
 }
 #canvas-bg {
 position: absolute; top: 0; left: 0;
@@ -66,51 +66,51 @@ opacity: 0.9;
 
 /* ── GRID OVERLAY ── */
 .grid-active .canvas-wrap {
-  background-image:
-  linear-gradient(to right, #1e2235 1px, transparent 1px),
-  linear-gradient(to bottom, #1e2235 1px, transparent 1px);
-  background-size: 20px 20px;
+    background-image:
+    linear-gradient(to right, #1e2235 1px, transparent 1px),
+    linear-gradient(to bottom, #1e2235 1px, transparent 1px);
+    background-size: 20px 20px;
 }
 
 /* ── RIGHT PANEL ── */
 .rpanel {
-  width: 190px; min-width: 190px;
-  background: var(--surface); border-left: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
+    width: 190px; min-width: 190px;
+    background: var(--surface); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0;
 }
 
 /* ── TOOLBAR ── */
 .toolbar {
-  display: flex; align-items: center; gap: 5px;
-  height: 38px; padding: 0 10px;
-  background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0;
+    display: flex; align-items: center; gap: 5px;
+    height: 38px; padding: 0 10px;
+    background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0;
 }
 .toolbar__sep { width: 1px; height: 16px; background: var(--border); margin: 0 3px; }
 .toolbar__spacer { flex: 1; }
 
 /* ── STATUS BAR ── */
 .statusbar {
-  display: flex; align-items: center; gap: 16px;
-  height: 24px; padding: 0 12px;
-  background: var(--surface); border-top: 1px solid var(--border);
-  font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted);
-  flex-shrink: 0;
+    display: flex; align-items: center; gap: 16px;
+    height: 24px; padding: 0 12px;
+    background: var(--surface); border-top: 1px solid var(--border);
+    font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted);
+    flex-shrink: 0;
 }
 .statusbar span { color: var(--accent2); }
 .statusbar__spacer { flex: 1; }
 
 /* ── PANEL ROW (Gauche + Droite côte à côte) ── */
 .panel-row {
-  display: flex;
-  border-bottom: 1px solid var(--border);
+    display: flex;
+    border-bottom: 1px solid var(--border);
 }
 .panel--half {
-  flex: 1;
-  border-bottom: none;   /* le parent gère la bordure basse */
-  min-width: 0;          /* permet le shrink dans flex */
+    flex: 1;
+    border-bottom: none;   /* le parent gère la bordure basse */
+    min-width: 0;          /* permet le shrink dans flex */
 }
 .panel--half:first-child {
-  border-right: 1px solid var(--border);
+    border-right: 1px solid var(--border);
 }
 
 /* ── PANEL ── */
@@ -119,13 +119,13 @@ opacity: 0.9;
 
 /* ── BUTTONS UI ── */
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  height: 28px; padding: 0 9px;
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
-  cursor: pointer; transition: border-color .12s, color .12s;
-  border-radius: 3px; white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+    height: 28px; padding: 0 9px;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    cursor: pointer; transition: border-color .12s, color .12s;
+    border-radius: 3px; white-space: nowrap;
 }
 .btn:hover { border-color: var(--accent2); color: var(--accent2); }
 .btn.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -137,9 +137,9 @@ opacity: 0.9;
 
 /* ── FORM ── */
 select, input[type="text"] {
-  background: var(--surface2); border: 1px solid var(--border);
-  color: var(--text); font-family: 'Rajdhani', sans-serif;
-  font-size: 12px; padding: 5px 7px; border-radius: 3px; width: 100%; outline: none;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; padding: 5px 7px; border-radius: 3px; width: 100%; outline: none;
 }
 select:focus, input[type="text"]:focus { border-color: var(--accent); }
 input[type="color"] { width: 100%; height: 26px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; padding: 2px; background: var(--surface2); }
@@ -154,10 +154,10 @@ input[type="color"] { width: 100%; height: 26px; border: 1px solid var(--border)
 
 /* ── LAYOUT LIST ── */
 .layout-item {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px;
-  background: var(--surface2); cursor: pointer; transition: border-color .12s;
-  font-size: 12px; font-weight: 600; margin-bottom: 4px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 8px; border: 1px solid var(--border); border-radius: 3px;
+    background: var(--surface2); cursor: pointer; transition: border-color .12s;
+    font-size: 12px; font-weight: 600; margin-bottom: 4px;
 }
 .layout-item:hover { border-color: var(--accent); }
 .layout-item.is-active { border-color: var(--accent); color: var(--accent2); background: #120d1e; }
@@ -165,28 +165,28 @@ input[type="color"] { width: 100%; height: 26px; border: 1px solid var(--border)
 
 /* ── BOUTONS CANVAS ── */
 .cbutton {
-  position: absolute;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: grab;
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 700;
-  overflow: visible;
-  font-size: 11px;
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.25);
-  user-select: none;
-  transition: box-shadow .12s, border-color .12s;
-  text-align: center;
-  line-height: 1.1;
+    position: absolute;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: grab;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    overflow: visible;
+    font-size: 11px;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.25);
+    user-select: none;
+    transition: box-shadow .12s, border-color .12s;
+    text-align: center;
+    line-height: 1.1;
 }
 .cbutton.size-24 { background: radial-gradient(circle at 35% 35%, #3a60e0, #1a3490); }
 .cbutton.size-30 { background: radial-gradient(circle at 35% 35%, #8a3de8, #4a15a0); }
 .cbutton.is-selected {
-  border-color: #fff;
-  box-shadow: 0 0 0 2px var(--accent2), 0 0 16px var(--accent);
-  z-index: 100;
-  cursor: grabbing;
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--accent2), 0 0 16px var(--accent);
+    z-index: 100;
+    cursor: grabbing;
 }
 .cbutton:hover { border-color: rgba(255,255,255,0.6); z-index: 50; }
 .cbutton.is-dragging { cursor: grabbing; z-index: 200; transition: none; }
@@ -194,48 +194,48 @@ input[type="color"] { width: 100%; height: 26px; border: 1px solid var(--border)
 /* ── CROIX SUPPRESSION SUR BOUTON ── */
 .cbutton__label { pointer-events: none; }
 .cbutton__delete {
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--danger);
-  border: 1.5px solid #ff9090;
-  color: #fff;
-  font-size: 8px;
-  font-weight: 700;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transform: scale(0.6);
-  transition: opacity .15s, transform .15s;
-  z-index: 300;
-  padding: 0;
-  font-family: sans-serif;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--danger);
+    border: 1.5px solid #ff9090;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity .15s, transform .15s;
+    z-index: 300;
+    padding: 0;
+    font-family: sans-serif;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 .cbutton.is-selected .cbutton__delete {
-  opacity: 1;
-  transform: scale(1);
+    opacity: 1;
+    transform: scale(1);
 }
 .cbutton__delete:hover {
-  background: #ff2020;
-  border-color: #fff;
-  transform: scale(1.15) !important;
+    background: #ff2020;
+    border-color: #fff;
+    transform: scale(1.15) !important;
 }
 
 /* ── TAILLE SELECTOR ── */
 .size-selector { display: flex; gap: 5px; }
 .size-btn {
-  flex: 1; height: 28px; border-radius: 3px; border: 1px solid var(--border);
-  background: var(--surface2); color: var(--text);
-  font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: all .12s;
-  display: flex; align-items: center; justify-content: center; gap: 5px;
+    flex: 1; height: 28px; border-radius: 3px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text);
+    font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all .12s;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
 }
 .size-btn .dot { border-radius: 50%; background: currentColor; flex-shrink: 0; }
 .size-btn:hover { border-color: var(--accent2); color: var(--accent2); }
