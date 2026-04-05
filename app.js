@@ -264,10 +264,8 @@ function loadSide(side, id) {
     el.classList.toggle('is-active', el.dataset.id === id));
 
     // Supprime les boutons de ce côté
-    buttons = buttons.filter(b => {
-        if (b.side === side) { b.el.remove(); return false; }
-        return true;
-    });
+    buttons.filter(b => b.side === side).forEach(b => b.el.remove());
+    buttons = buttons.filter(b => b.side !== side);
 
     layout[side][id].buttons.forEach(b =>
     createButton(b.x, b.y, b.r, b.name, side));
@@ -285,7 +283,8 @@ function recalcPxPerMm() {
     const svgH    = layout.svgHeight;
     const scaleX  = wrapW / svgW;
     const scaleY  = wrapH / svgH;
-    pxPerMm       = Math.min(scaleX, scaleY) * 0.9;
+    const CANVAS_PADDING = 0.9; // 10% de marge autour du SVG
+    pxPerMm       = Math.min(scaleX, scaleY) * CANVAS_PADDING;
 
     const dispW   = svgW * pxPerMm;
     const dispH   = svgH * pxPerMm;
@@ -389,6 +388,11 @@ function bindButtonEvents(btn) {
                 const snap = 1;
                 nx = Math.round(nx / snap) * snap;
                 ny = Math.round(ny / snap) * snap;
+            }
+            const layout = LAYOUTS[activeLayoutId];
+            if (layout) {
+                nx = Math.max(btn.r, Math.min(nx, layout.svgWidth - btn.r));
+                ny = Math.max(btn.r, Math.min(ny, layout.svgHeight - btn.r));
             }
             btn.xMm = nx;
             btn.yMm = ny;
@@ -504,15 +508,21 @@ function bindRightPanel() {
     propX.addEventListener('change', () => {
         const btn = buttons.find(b => b.id === selectedId);
         if (!btn) return;
-        btn.xMm = parseFloat(propX.value) || btn.xMm;
+        const val = parseFloat(propX.value);
+        if (isNaN(val)) { propX.value = btn.xMm.toFixed(1); return; }
+        btn.xMm = val;
         repositionButton(btn);
+        propX.value = btn.xMm.toFixed(1);
     });
 
     propY.addEventListener('change', () => {
         const btn = buttons.find(b => b.id === selectedId);
         if (!btn) return;
-        btn.yMm = parseFloat(propY.value) || btn.yMm;
+        const val = parseFloat(propY.value);
+        if (isNaN(val)) { propY.value = btn.yMm.toFixed(1); return; }
+        btn.yMm = val;
         repositionButton(btn);
+        propY.value = btn.yMm.toFixed(1);
     });
 
     // Size buttons dans le right panel
@@ -580,6 +590,13 @@ function bindToolbar() {
 }
 
 // ─────────────────────────────────────────────
+//  UTILITAIRE ÉCHAPPEMENT XML
+// ─────────────────────────────────────────────
+function escapeXml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ─────────────────────────────────────────────
 //  EXPORT SVG
 // ─────────────────────────────────────────────
 function exportSVG() {
@@ -592,7 +609,7 @@ function exportSVG() {
         const col = b.r === 15 ? '#7027CF' : '#2D4FCC';
         btnSVG += `  <circle cx="${b.xMm.toFixed(2)}" cy="${b.yMm.toFixed(2)}" r="${b.r}" fill="${col}33" stroke="${col}" stroke-width="0.8"/>\n`;
         if (b.name) {
-            btnSVG += `  <text x="${b.xMm.toFixed(2)}" y="${(b.yMm + 0.4).toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${(b.r * 0.55).toFixed(1)}" fill="#ffffff">${b.name}</text>\n`;
+            btnSVG += `  <text x="${b.xMm.toFixed(2)}" y="${(b.yMm + 0.4).toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="Arial,sans-serif" font-size="${(b.r * 0.55).toFixed(1)}" fill="#ffffff">${escapeXml(b.name)}</text>\n`;
         }
     });
 
@@ -600,8 +617,11 @@ function exportSVG() {
     fetch(bgImg.src)
     .then(r => r.text())
     .then(contourSVG => {
-        // Extrait le contenu du SVG contour
-        const inner = contourSVG.replace(/<\?xml[^?]*\?>\s*/i, '').replace(/<svg[^>]*>/i, '').replace(/<\/svg>/i, '');
+        // Extrait le contenu du SVG contour via DOMParser
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(contourSVG, 'image/svg+xml');
+        const svgEl = doc.querySelector('svg');
+        const inner = svgEl ? svgEl.innerHTML : '';
         const out = `<?xml version="1.0" encoding="UTF-8"?>
         <!-- Bullraï Fightstick — Layout ${headerTag.textContent} -->
         <!-- Unités : millimètres -->
@@ -657,5 +677,5 @@ function download(content, filename, mime) {
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 100);
 }
