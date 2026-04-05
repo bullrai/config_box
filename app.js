@@ -15,22 +15,22 @@ const LAYOUTS = {
             booyah: {
                 label: 'Booyah',
                 buttons: [
-                    { x: 106.4, y: 118.3, r: 12, name: ''  },
+                    { x: 106.4, y: 118.3, r: 12, name: ''      },
                     { x: 135.4, y: 127.3, r: 12, name: 'DOWN'  },
                     { x:  73.4, y:  52.3, r: 12, name: 'LEFT'  },
-                    { x: 103.4, y:  52.3, r: 12, name: 'UP'       },
-                    { x: 130.4, y:  64.3, r: 12, name: 'RIGHT'       },
+                    { x: 103.4, y:  52.3, r: 12, name: 'UP'    },
+                    { x: 130.4, y:  64.3, r: 12, name: 'RIGHT' },
                     { x: 155.4, y: 150.3, r: 12, name: ''      },
-                    { x: 167.9, y:  53.8, r: 12, name: 'select'   },
+                    { x: 167.9, y:  53.8, r: 12, name: 'select'},
                 ]
             },
             hit: {
                 label: 'Hit',
                 buttons: [
-                    { x:  72.5,  y:  61.8, r: 12, name: 'LEFT'  },
-                    { x: 102.5,  y:  60.3, r: 12, name: 'UP'  },
-                    { x: 130.0,  y:  73.8, r: 12, name: 'RIGHT' },
-                    { x: 142.5,  y: 126.8, r: 15, name: 'DOWN'      },  // 30mm bas-gauche
+                    { x:  72.5,  y:  61.8, r: 12, name: 'LEFT' },
+                    { x: 102.5,  y:  60.3, r: 12, name: 'UP'   },
+                    { x: 130.0,  y:  73.8, r: 12, name: 'RIGHT'},
+                    { x: 142.5,  y: 126.8, r: 15, name: 'DOWN' },  // 30mm bas-gauche
                 ]
             },
             hit1: {
@@ -39,8 +39,8 @@ const LAYOUTS = {
                     { x:  72.5, y:  61.8, r: 12, name: 'LEFT'  },
                     { x: 102.5, y:  60.3, r: 12, name: 'DOWN'  },  // ou RIGHT selon orientation
                     { x: 130.0, y:  73.8, r: 12, name: 'RIGHT' },
-                    { x:  44.0, y:  77.8, r: 15, name: ''  },  // 30mm
-                    { x: 142.5,  y: 126.8, r: 15, name: 'DOWN'      },  // 30mm bas-gauche
+                    { x:  44.0, y:  77.8, r: 15, name: ''      },  // 30mm
+                    { x: 142.5,  y: 126.8, r: 15, name: 'DOWN' },  // 30mm bas-gauche
                 ]
             },
             diamond: {
@@ -56,8 +56,8 @@ const LAYOUTS = {
                 label: 'zqsd',
                 buttons: [
                     { x:  67.83, y: 76.03, r: 12, name: 'LEFT'  },
-                    { x:  96.23, y: 78.53, r: 12, name: ''       },
-                    { x:  98.64, y: 49.83, r: 12, name: ''       },
+                    { x:  96.23, y: 78.53, r: 12, name: ''      },
+                    { x:  98.64, y: 49.83, r: 12, name: ''      },
                     { x: 124.64, y: 80.83, r: 12, name: 'RIGHT' },
                 ]
             },
@@ -66,18 +66,18 @@ const LAYOUTS = {
             'booyah': {
                 label: 'Booyah',
                 buttons: [
-                    { x: 212.9, y:  53.8, r: 12, name: 'start'   },
-                    { x: 250.4, y:  59.3, r: 12, name: 'X'   },
-                    { x: 277.4, y:  47.3, r: 12, name: 'Y'   },
+                    { x: 212.9, y:  53.8, r: 12, name: 'start' },
+                    { x: 250.4, y:  59.3, r: 12, name: 'X'     },
+                    { x: 277.4, y:  47.3, r: 12, name: 'Y'     },
                     { x: 228.5, y:  79.0, r: 12, name: ''      },
-                    { x: 256.4, y:  88.4, r: 12, name: 'L1'   },
-                    { x: 283.4, y:  77.6, r: 12, name: 'R1'   },
-                    { x: 312.4, y:  77.6, r: 12, name: 'L2'   },
-                    { x: 307.4, y:  47.3, r: 12, name: 'B'   },
+                    { x: 256.4, y:  88.4, r: 12, name: 'L1'    },
+                    { x: 283.4, y:  77.6, r: 12, name: 'R1'    },
+                    { x: 312.4, y:  77.6, r: 12, name: 'L2'    },
+                    { x: 307.4, y:  47.3, r: 12, name: 'B'     },
                     { x: 274.4, y: 118.3, r: 12, name: ''      },
-                    { x: 245.4, y: 127.3, r: 12, name: 'A'      },
+                    { x: 245.4, y: 127.3, r: 12, name: 'A'     },
                     { x: 225.4, y: 150.3, r: 12, name: ''      },
-                    { x: 338.7, y:  57.7, r: 15, name: 'R2' },
+                    { x: 338.7, y:  57.7, r: 15, name: 'R2'    },
                 ]
             },
             'segaP2': {
@@ -573,16 +573,6 @@ function bindToolbar() {
     document.getElementById('btn-snap').addEventListener('click', function() {
         snapEnabled = !snapEnabled;
         this.classList.toggle('is-active', snapEnabled);
-    });
-
-    document.getElementById('btn-import').addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const url = URL.createObjectURL(file);
-        bgImg.src = url;
-        bgImg.onload = () => recalcPxPerMm();
-        headerTag.textContent = file.name.replace('.svg', '');
-        e.target.value = '';
     });
 
     document.getElementById('btn-export-svg').addEventListener('click', exportSVG);
