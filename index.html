@@ -82,44 +82,37 @@
 
         </div>
 
-        <!-- RIGHT PANEL -->
-        <aside class="rpanel">
-            <div class="panel">
-                <div class="panel__title">Propriétés</div>
-
-                <div id="props-empty" class="hint">Clique sur un bouton pour éditer</div>
-
-                <div id="props-form" style="display:none">
-                    <div class="prop-row">
-                        <div class="prop-label">Nom</div>
-                        <input type="text" id="prop-name" placeholder="LP, HP, K1…">
-                    </div>
-                    <div class="prop-row">
-                        <div class="prop-label">Taille</div>
-                        <div class="size-selector">
-                            <button class="size-btn" data-size="24">
-                                <span class="dot" style="width:10px;height:10px;"></span> 24mm
-                            </button>
-                            <button class="size-btn" data-size="30">
-                                <span class="dot" style="width:13px;height:13px;"></span> 30mm
-                            </button>
-                        </div>
-                        <input type="hidden" id="prop-size">
-                    </div>
-                    <div class="prop-row">
-                        <div class="prop-label">Position (mm)</div>
-                        <div class="row-5">
-                            <input type="text" id="prop-x" placeholder="X" style="flex:1">
-                            <input type="text" id="prop-y" placeholder="Y" style="flex:1">
-                        </div>
-                    </div>
-                    <div class="gap-4 mt-6">
-                        <button class="btn btn--full is-disabled" id="rpanel-dup">Dupliquer</button>
-                        <button class="btn btn--full is-danger is-disabled" id="rpanel-delete">Supprimer</button>
-                    </div>
+        <!-- PROPS POPOVER (flottant) -->
+        <div class="props-popover" id="props-popover">
+            <div class="props-popover__title">Propriétés</div>
+            <div class="prop-row">
+                <div class="prop-label">Nom</div>
+                <input type="text" id="prop-name" placeholder="LP, HP, K1…">
+            </div>
+            <div class="prop-row">
+                <div class="prop-label">Taille</div>
+                <div class="size-selector">
+                    <button class="size-btn" data-size="24">
+                        <span class="dot" style="width:10px;height:10px;"></span> 24mm
+                    </button>
+                    <button class="size-btn" data-size="30">
+                        <span class="dot" style="width:13px;height:13px;"></span> 30mm
+                    </button>
+                </div>
+                <input type="hidden" id="prop-size">
+            </div>
+            <div class="prop-row">
+                <div class="prop-label">Position (mm)</div>
+                <div class="row-5">
+                    <input type="text" id="prop-x" placeholder="X" style="flex:1">
+                    <input type="text" id="prop-y" placeholder="Y" style="flex:1">
                 </div>
             </div>
-        </aside>
+            <div class="gap-4 mt-6">
+                <button class="btn btn--full is-disabled" id="rpanel-dup">Dupliquer</button>
+                <button class="btn btn--full is-danger is-disabled" id="rpanel-delete">Supprimer</button>
+            </div>
+        </div>
 
     </div>
 </div>

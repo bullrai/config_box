@@ -150,11 +150,14 @@ let svgOffsetX      = 0;        // offset du SVG dans le canvas-wrap (px)
 let svgOffsetY      = 0;
 let gridEnabled     = false;
 let snapEnabled     = false;
+let popoverFixedPos = null;     // position sauvegardée par drag
+let popoverIsFixed  = false;    // mode fixe vs suivre bouton
 
 // ─────────────────────────────────────────────
 //  DOM
 // ─────────────────────────────────────────────
 const canvasWrap    = document.getElementById('canvas-wrap');
+const appBody       = document.querySelector('.app__body');
 const canvasBg      = document.getElementById('canvas-bg');
 const canvasBtns    = document.getElementById('canvas-buttons');
 const bgImg         = document.getElementById('bg-img');
@@ -163,8 +166,7 @@ const headerTag     = document.getElementById('header-tag');
 const statusPos     = document.getElementById('status-pos');
 const statusSel     = document.getElementById('status-sel');
 const statusCount   = document.getElementById('status-count');
-const propsEmpty    = document.getElementById('props-empty');
-const propsForm     = document.getElementById('props-form');
+const propsPopover  = document.getElementById('props-popover');
 const propName      = document.getElementById('prop-name');
 const propSize      = document.getElementById('prop-size');
 const propX         = document.getElementById('prop-x');
@@ -176,17 +178,47 @@ const propY         = document.getElementById('prop-y');
 document.addEventListener('DOMContentLoaded', () => {
     buildLayoutList();
     bindToolbar();
-    bindRightPanel();
+    bindPropsPopover();
     bindCanvasEvents();
+    loadPopoverPos();
 
-    // Charge le premier layout
     const firstId = Object.keys(LAYOUTS)[0];
     if (firstId) loadLayout(firstId);
 });
 
 window.addEventListener('resize', () => {
     if (activeLayoutId) recalcPxPerMm();
+    if (selectedId) {
+        const btn = buttons.find(b => b.id === selectedId);
+        if (btn) positionPopover(btn);
+    }
 });
+
+// ─────────────────────────────────────────────
+//  POPOVER POSITION (localStorage)
+// ─────────────────────────────────────────────
+function savePopoverPos() {
+    const pos = {
+        left: propsPopover.style.left,
+        top: propsPopover.style.top
+    };
+    localStorage.setItem('propsPopoverPos', JSON.stringify(pos));
+    popoverFixedPos = pos;
+    popoverIsFixed = true;
+}
+
+function loadPopoverPos() {
+    const saved = localStorage.getItem('propsPopoverPos');
+    if (saved) {
+        const pos = JSON.parse(saved);
+        propsPopover.style.left = pos.left;
+        propsPopover.style.top = pos.top;
+        popoverFixedPos = pos;
+        popoverIsFixed = true;
+        return true;
+    }
+    return false;
+}
 
 // ─────────────────────────────────────────────
 //  LISTE DES LAYOUTS
@@ -263,7 +295,6 @@ function loadSide(side, id) {
     document.querySelectorAll(`.${side}-item`).forEach(el =>
     el.classList.toggle('is-active', el.dataset.id === id));
 
-    // Supprime les boutons de ce côté
     buttons.filter(b => b.side === side).forEach(b => b.el.remove());
     buttons = buttons.filter(b => b.side !== side);
 
@@ -272,7 +303,6 @@ function loadSide(side, id) {
     updateCount();
 }
 
-// Recalcule pxPerMm et les offsets du SVG dans le canvas
 function recalcPxPerMm() {
     const layout  = LAYOUTS[activeLayoutId];
     if (!layout) return;
@@ -283,7 +313,7 @@ function recalcPxPerMm() {
     const svgH    = layout.svgHeight;
     const scaleX  = wrapW / svgW;
     const scaleY  = wrapH / svgH;
-    const CANVAS_PADDING = 0.9; // 10% de marge autour du SVG
+    const CANVAS_PADDING = 0.9;
     pxPerMm       = Math.min(scaleX, scaleY) * CANVAS_PADDING;
 
     const dispW   = svgW * pxPerMm;
@@ -291,13 +321,11 @@ function recalcPxPerMm() {
     svgOffsetX    = (wrapW - dispW) / 2;
     svgOffsetY    = (wrapH - dispH) / 2;
 
-    // Repositionne le SVG de fond
     bgImg.style.width  = dispW + 'px';
     bgImg.style.height = dispH + 'px';
     bgImg.style.left   = svgOffsetX + 'px';
     bgImg.style.top    = svgOffsetY + 'px';
 
-    // Repositionne tous les boutons
     buttons.forEach(b => repositionButton(b));
 }
 
@@ -312,13 +340,11 @@ function createButton(xMm, yMm, r, name, side = 'custom') {
     el.className = `cbutton size-${r === 15 ? 30 : 24}`;
     el.dataset.id = id;
 
-    // Label
     const label = document.createElement('span');
     label.className = 'cbutton__label';
     label.textContent = name || '';
     el.appendChild(label);
 
-    // Croix de suppression
     const del = document.createElement('button');
     del.className = 'cbutton__delete';
     del.innerHTML = '✕';
@@ -398,6 +424,7 @@ function bindButtonEvents(btn) {
             btn.yMm = ny;
             repositionButton(btn);
             updatePropsForm(btn);
+            positionPopover(btn);
             statusPos.innerHTML = `x: <span>${nx.toFixed(1)}</span> y: <span>${ny.toFixed(1)}</span> mm`;
         }
 
@@ -411,7 +438,6 @@ function bindButtonEvents(btn) {
         document.addEventListener('mouseup', onUp);
     });
 
-    // Double-clic → focus sur le champ nom
     el.addEventListener('dblclick', e => {
         e.stopPropagation();
         selectButton(btn.id);
@@ -430,18 +456,55 @@ function selectButton(id) {
     const btn = buttons.find(b => b.id === id);
     const hasSel = !!btn;
 
-    propsEmpty.style.display = hasSel ? 'none' : 'block';
-    propsForm.style.display  = hasSel ? 'block' : 'none';
+    if (hasSel) {
+        updatePropsForm(btn);
+        positionPopover(btn);
+        propsPopover.classList.add('is-visible');
+        statusSel.innerHTML = `sel: <span>${btn.name || 'btn_' + btn.id}</span>`;
+    } else {
+        propsPopover.classList.remove('is-visible');
+        statusSel.innerHTML = `sel: <span>aucune</span>`;
+    }
 
     ['rpanel-delete', 'rpanel-dup'].forEach(bid => {
         document.getElementById(bid)?.classList.toggle('is-disabled', !hasSel);
     });
+}
 
-    if (btn) {
-        updatePropsForm(btn);
-        statusSel.innerHTML = `sel: <span>${btn.name || 'btn_' + btn.id}</span>`;
+function positionPopover(btn) {
+    const wrapRect = canvasWrap.getBoundingClientRect();
+    const popoverW = 170;
+    const popoverH = 220;
+
+    if (popoverIsFixed && popoverFixedPos) {
+        let left = parseFloat(propsPopover.style.left) || 0;
+        let top = parseFloat(propsPopover.style.top) || 0;
+
+        if (left + popoverW > wrapRect.width) left = wrapRect.width - popoverW - 8;
+        if (top + popoverH > wrapRect.height) top = wrapRect.height - popoverH - 8;
+        if (left < 0) left = 8;
+        if (top < 0) top = 8;
+
+        propsPopover.style.left = left + 'px';
+        propsPopover.style.top = top + 'px';
     } else {
-        statusSel.innerHTML = `sel: <span>aucune</span>`;
+        const btnRect = btn.el.getBoundingClientRect();
+        const offset = 12;
+
+        let left = btnRect.right + offset - wrapRect.left;
+        let top = btnRect.bottom + offset - wrapRect.top;
+
+        if (left + popoverW > wrapRect.width) {
+            left = btnRect.left - wrapRect.left - popoverW - offset;
+        }
+        if (top + popoverH > wrapRect.height) {
+            top = btnRect.top - wrapRect.top - popoverH - offset;
+        }
+        if (left < 0) left = 8;
+        if (top < 0) top = 8;
+
+        propsPopover.style.left = left + 'px';
+        propsPopover.style.top = top + 'px';
     }
 }
 
@@ -450,7 +513,6 @@ function updatePropsForm(btn) {
     propSize.value = btn.r === 15 ? '30' : '24';
     propX.value    = btn.xMm.toFixed(1);
     propY.value    = btn.yMm.toFixed(1);
-    // Mettre à jour les size-btn
     document.querySelectorAll('.size-btn').forEach(el =>
     el.classList.toggle('is-active', el.dataset.size === String(btn.r === 15 ? 30 : 24)));
 }
@@ -494,9 +556,9 @@ function updateCount() {
 }
 
 // ─────────────────────────────────────────────
-//  PROPRIÉTÉS (right panel)
+//  PROPRIÉTÉS (popover flottant)
 // ─────────────────────────────────────────────
-function bindRightPanel() {
+function bindPropsPopover() {
     propName.addEventListener('input', () => {
         const btn = buttons.find(b => b.id === selectedId);
         if (!btn) return;
@@ -525,7 +587,6 @@ function bindRightPanel() {
         propY.value = btn.yMm.toFixed(1);
     });
 
-    // Size buttons dans le right panel
     document.querySelectorAll('.size-btn').forEach(el => {
         el.addEventListener('click', () => {
             const btn = buttons.find(b => b.id === selectedId);
@@ -540,10 +601,59 @@ function bindRightPanel() {
 
     document.getElementById('rpanel-delete').addEventListener('click', deleteSelected);
     document.getElementById('rpanel-dup').addEventListener('click', duplicateSelected);
+
+    document.addEventListener('mousedown', e => {
+        if (propsPopover.classList.contains('is-visible') &&
+            !propsPopover.contains(e.target) &&
+            !e.target.classList.contains('cbutton')) {
+            selectButton(null);
+        }
+    });
+
+    const popoverTitle = propsPopover.querySelector('.props-popover__title');
+    let isDragging = false;
+    let dragStartX, dragStartY, startLeft, startTop;
+
+    popoverTitle.addEventListener('mousedown', e => {
+        if (e.target.tagName === 'INPUT') return;
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        startLeft = parseFloat(propsPopover.style.left) || 0;
+        startTop = parseFloat(propsPopover.style.top) || 0;
+        propsPopover.classList.add('is-dragging');
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        let newLeft = startLeft + dx;
+        let newTop = startTop + dy;
+
+        const bodyRect = appBody.getBoundingClientRect();
+        const popoverW = propsPopover.offsetWidth;
+        const popoverH = propsPopover.offsetHeight;
+
+        newLeft = Math.max(0, Math.min(newLeft, bodyRect.width - popoverW));
+        newTop = Math.max(0, Math.min(newTop, bodyRect.height - popoverH));
+
+        propsPopover.style.left = newLeft + 'px';
+        propsPopover.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            propsPopover.classList.remove('is-dragging');
+            savePopoverPos();
+        }
+    });
 }
 
 // ─────────────────────────────────────────────
-//  CANVAS EVENTS (clic sur le vide = déselect)
+//  CANVAS EVENTS
 // ─────────────────────────────────────────────
 function bindCanvasEvents() {
     canvasBtns.addEventListener('mousedown', e => {
@@ -603,11 +713,9 @@ function exportSVG() {
         }
     });
 
-    // Charge le SVG contour et l'intègre
     fetch(bgImg.src)
     .then(r => r.text())
     .then(contourSVG => {
-        // Extrait le contenu du SVG contour via DOMParser
         const parser = new DOMParser();
         const doc = parser.parseFromString(contourSVG, 'image/svg+xml');
         const svgEl = doc.querySelector('svg');
@@ -626,7 +734,6 @@ function exportSVG() {
         download(out, `bullrai-${activeLayoutId || 'layout'}.svg`, 'image/svg+xml');
     })
     .catch(() => {
-        // Si fetch échoue (import client), export sans contour
         const out = `<?xml version="1.0" encoding="UTF-8"?>
         <svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}">
         <rect width="${W}" height="${H}" fill="none"/>
